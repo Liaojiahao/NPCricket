@@ -23,20 +23,20 @@
         self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 
-        self.alertController = [UIAlertController alertControllerWithTitle:@"Leave Feedback"
+        self.alertController = [UIAlertController alertControllerWithTitle:@"说点什么让我们更容易找到问题:]"
                                                                                  message:nil
                                                                           preferredStyle:UIAlertControllerStyleAlert];
         [self.alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            textField.placeholder = @"e.g. This is awesome!";
+            textField.placeholder = @"例如：这个地方文字重叠了";
         }];
 
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
                                                                style:UIAlertActionStyleCancel
                                                              handler:^(UIAlertAction *action) {
                                                                  [self animateOutScreenshotImageView];
                                                              }];
 
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Send"
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"发送"
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action) {
                                                              UITextField *textField = [self.alertController.textFields firstObject];
@@ -59,7 +59,7 @@
     self.screenshotImageView.hidden = YES;
     [self.screenshotImageView NP_applyShadow];
 
-    self.headerLabel.text = @"Tap or draw to leave feedback";
+    self.headerLabel.text = @"点击或者画圈将问题标注出来";
     self.headerLabel.backgroundColor = [UIColor NP_cricketGreen];
     self.headerLabel.textColor = [UIColor whiteColor];
     [self.headerLabel NP_applyShadow];
@@ -85,14 +85,18 @@
 #pragma mark - Animation Transitions
 
 - (void)animateInOutHeaderLabel {
+    self.headerLabel.alpha = 0;
     self.headerLabelYLayoutConstraint.constant = 0.0;
-    [UIView animateWithDuration:0.3 delay:0.5 options:0 animations:^{
-        [self.headerLabel layoutIfNeeded];
+
+    [UIView animateWithDuration:0.5 delay:0.5 options:0 animations:^{
+        self.headerLabel.alpha = 1.0;
     } completion:^(BOOL finished) {
-        self.headerLabelYLayoutConstraint.constant = -CGRectGetHeight(self.headerLabel.frame);
-        [UIView animateWithDuration:0.3 delay:1.5 options:0 animations:^{
-            [self.headerLabel layoutIfNeeded];
-        } completion:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.5 delay:0 options:0 animations:^{
+                self.headerLabel.alpha = 0;
+            } completion:nil];
+        });
+
     }];
 }
 
