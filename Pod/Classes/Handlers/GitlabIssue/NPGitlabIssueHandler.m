@@ -29,7 +29,7 @@
     self = [super init];
     if (self) {
         _privateKey = privateKey;
-        _projectId = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)projectId, NULL, (CFStringRef) @"!*'/\"();@&=+$,?%#[]% ", kCFStringEncodingUTF8);
+        _projectId = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)projectId, NULL, (CFStringRef) @"!*'/\"();@&=-+$,?%#[]% ", kCFStringEncodingUTF8);
         _baseUrl = baseUrl;
     }
     return self;
