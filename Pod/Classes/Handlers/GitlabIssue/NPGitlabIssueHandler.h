@@ -12,5 +12,6 @@
 @interface NPGitlabIssueHandler : NSObject<NPCricketHandler>
 
 + (instancetype)handlerWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl;
++ (instancetype)handlerWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl customData:(NSString *)data;
 
 @end

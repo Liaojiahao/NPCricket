@@ -16,21 +16,27 @@
 @property (strong, nonatomic) NSString *projectId;
 @property (strong, nonatomic) NSString *baseUrl;
 @property (strong, nonatomic) AFHTTPSessionManager *manager;
+@property (strong, nonatomic) NSString *customData;
 
 @end
 
 @implementation NPGitlabIssueHandler
 
 + (instancetype)handlerWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl {
-    return [[[self class] alloc] initWithPrivateKey:privateKey projectId:projectId baseUrl:baseUrl];
+    return [[[self class] alloc] initWithPrivateKey:privateKey projectId:projectId baseUrl:baseUrl customData:nil];
 }
 
-- (instancetype)initWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl {
++ (instancetype)handlerWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl customData:(NSString *)data {
+    return [[[self class] alloc] initWithPrivateKey:privateKey projectId:projectId baseUrl:baseUrl customData:data];
+}
+
+- (instancetype)initWithPrivateKey:(NSString *)privateKey projectId:(NSString *)projectId baseUrl:(NSString *)baseUrl customData:(NSString *)data {
     self = [super init];
     if (self) {
         _privateKey = privateKey;
         _projectId = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)projectId, NULL, (CFStringRef) @"!*'/\"();@&=-+$,?%#[]% ", kCFStringEncodingUTF8);
         _baseUrl = baseUrl;
+        _customData = data;
     }
     return self;
 }
@@ -62,6 +68,11 @@
 
 - (void)postIssueWithFeedback:(NPFeedback *)feedback imageMarkdownText:(NSString *)markdownText {
     if (feedback && markdownText.length != 0) {
+        NSString *title = feedback.message.length == 0?feedback.message:@"反馈";
+        NSString *desc = [NSString stringWithFormat:@"%@\n%@", feedback.messageWithMetaData, markdownText];
+        if (self.customData.length != 0) {
+            desc = [desc stringByAppendingFormat:@"\n%@", self.customData];
+        }
         [self.manager POST:@"issues" parameters:@{@"title":@"反馈", @"description":[NSString stringWithFormat:@"%@\n%@", feedback.messageWithMetaData, markdownText]} success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"success:%@", responseObject);
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
