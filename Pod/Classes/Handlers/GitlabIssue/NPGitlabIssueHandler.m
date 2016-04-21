@@ -73,7 +73,7 @@
         if (self.customData.length != 0) {
             desc = [desc stringByAppendingFormat:@"\n%@", self.customData];
         }
-        [self.manager POST:@"issues" parameters:@{@"title":@"反馈", @"description":[NSString stringWithFormat:@"%@\n%@", feedback.messageWithMetaData, markdownText]} success:^(NSURLSessionDataTask *task, id responseObject) {
+        [self.manager POST:@"issues" parameters:@{@"title":title, @"description":desc} success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"success:%@", responseObject);
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"post issue error:%@", error.localizedDescription);
