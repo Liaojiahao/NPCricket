@@ -68,7 +68,7 @@
 
 - (void)postIssueWithFeedback:(NPFeedback *)feedback imageMarkdownText:(NSString *)markdownText {
     if (feedback && markdownText.length != 0) {
-        NSString *title = feedback.message.length == 0?feedback.message:@"反馈";
+        NSString *title = feedback.message.length != 0?feedback.message:@"反馈";
         NSString *desc = [NSString stringWithFormat:@"%@\n%@", feedback.messageWithMetaData, markdownText];
         if (self.customData.length != 0) {
             desc = [desc stringByAppendingFormat:@"\n%@", self.customData];
